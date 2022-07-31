@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "app"
+version = "0.1.0"
+description = "Marketplace API"
+authors = ["Str1kez <vazinov@yandex.ru>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.79.0"
+gunicorn = "^20.1.0"
+uvicorn = "^0.18.2"
+redis-om = "^0.0.27"
+alembic = "^1.8.1"
+psycopg2 = "^2.9.3"
+gino = {extras = ["starlette"], version = "^1.0.1"}
+python-dotenv = "^0.20.0"
+
+[tool.poetry.dev-dependencies]
+requests = "^2.28.1"
+pytest = "^7.1.2"
+
+[tool.poetry.scripts]
+runserver = 'app.main:main'
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
