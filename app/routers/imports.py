@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, BackgroundTasks
 from fastapi.responses import Response
 
 from app.db.models import ShopUnitModel
@@ -13,18 +13,20 @@ router = APIRouter(prefix='/imports',
 
 
 @router.post('')
-async def post_imports(imports: ShopUnitImportRequest):
+async def post_imports(imports: ShopUnitImportRequest, background_tasks: BackgroundTasks):
     """
-    ### Lets send a list of nodes!
+    ### Отправь список узлов!
     """
     if not await parent_is_category(imports.items):
         raise CustomValidationError(message='parent is not CATEGORY')
+
     for node in imports.items:
         # Здесь node -> ShopUnitImport, а в бд ShopUnit
         new_node = await ShopUnitModel.get(node.id)
         if new_node:
             await new_node.update(date=imports.updateDate, **node.dict()).apply()
         else:
-            await ShopUnitModel.create(date=imports.updateDate, **node.dict())
-    # TODO: создать background task на изменение цены в бд у категорий
+            new_node = await ShopUnitModel.create(date=imports.updateDate, **node.dict())
+        background_tasks.add_task(ShopUnitModel.update_category_price, new_node)
+
     return Response()

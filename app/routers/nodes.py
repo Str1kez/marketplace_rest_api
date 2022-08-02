@@ -14,10 +14,9 @@ router = APIRouter(prefix='/nodes',
 @router.get('/{id}', response_model=ShopUnitExportRequest)
 async def view_node(id: UUID4):
     """
-    ### You can view the item
+    ### Можно посмотреть на товары
     """
     node = await ShopUnitModel.get_or_404(id)
     # Просмотр всех объектов ~O(n^2)
     node_dict = await get_all_children_list(node)
-    parsed_data = ShopUnitExportRequest.construct(**node_dict)
-    return parsed_data
+    return node_dict

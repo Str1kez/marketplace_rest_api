@@ -29,11 +29,10 @@ class ShopUnitModel(db.Model):
     async def __set_price(node: 'ShopUnitModel') -> None:
         sum_func = db.func.sum(ShopUnitModel.price)
         count_func = db.func.count(ShopUnitModel.id)
-        # TODO: найти способ совместить эти функции в одну
 
-        average_price = await db.select((sum_func, count_func)).where(ShopUnitModel.parentId == node.id).gino.all()
-        print(average_price, node.id)
-        # if average_price is None:
-        #     await node.update(price=None).apply()
-        # else:
-        #     await node.update(price=int(average_price)).apply()
+        child_price, child_amount = await db.select((sum_func, count_func)).where(ShopUnitModel.parentId == node.id).gino.first()
+
+        if child_price is None:
+            await node.update(price=None).apply()
+        else:
+            await node.update(price=child_price // child_amount).apply()

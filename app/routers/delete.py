@@ -13,7 +13,7 @@ router = APIRouter(prefix='/delete',
 @router.delete('/{id}')
 async def delete_node(id: UUID4, background_tasks: BackgroundTasks):
     """
-    ### Use for deleting node
+    ### Удаление узла
     """
     node = await ShopUnitModel.get_or_404(id)
     await node.delete()
