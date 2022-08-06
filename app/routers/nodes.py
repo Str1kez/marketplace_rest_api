@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Path
 from pydantic.types import UUID4
 
 from app.db.models import ShopUnitModel
@@ -12,7 +12,7 @@ router = APIRouter(prefix='/nodes',
 
 
 @router.get('/{id}', response_model=ShopUnitExportRequest)
-async def view_node(id: UUID4):
+async def view_node(id: UUID4 = Path(..., description='**Existing** Item id', example='3fa85f64-5717-4562-b3fc-2c963f66afa6')):
     """### Можно посмотреть на товары"""
     
     node = await ShopUnitModel.get_or_404(id)
