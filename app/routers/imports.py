@@ -1,10 +1,10 @@
-from fastapi import APIRouter, BackgroundTasks
+from fastapi import APIRouter, BackgroundTasks, Depends
 from fastapi.responses import Response
 
 from app.db.models import ShopUnitModel
 from app.db.validation_models import ShopUnitImportRequest
 from app.exceptions import CustomValidationError
-from app.utils.swagger_responses import VALIDATION_ERROR_RESPONSE
+from app.utils.responses import VALIDATION_ERROR_RESPONSE
 from app.validators import parent_is_category
 
 router = APIRouter(prefix='/imports',
@@ -12,14 +12,16 @@ router = APIRouter(prefix='/imports',
                    responses=VALIDATION_ERROR_RESPONSE)
 
 
-@router.post('')
-async def post_imports(imports: ShopUnitImportRequest, background_tasks: BackgroundTasks):
-    """
-    ### Отправь список узлов!
-    """
+async def parent_checker(imports: ShopUnitImportRequest):
     if not await parent_is_category(imports.items):
         raise CustomValidationError(message='parent is not CATEGORY')
+    return imports
 
+
+@router.post('')
+async def post_imports(background_tasks: BackgroundTasks, imports: ShopUnitImportRequest = Depends(parent_checker)):
+    """### Отправь список узлов!"""
+    
     for node in imports.items:
         # Здесь node -> ShopUnitImport, а в бд ShopUnit
         new_node = await ShopUnitModel.get(node.id)
