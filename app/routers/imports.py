@@ -3,7 +3,7 @@ from fastapi.responses import Response
 
 from datetime import datetime as dt
 
-from app.db.models import ShopUnitModel
+from app.db.models import ShopUnit
 from app.db.validation_models import ShopUnitImportRequest
 from app.exceptions import CustomValidationError
 from app.utils.datetime_convert import convert_to_iso_8601
@@ -78,11 +78,11 @@ async def post_imports(background_tasks: BackgroundTasks, imports: ShopUnitImpor
     
     for node in imports.items:
         # Здесь node -> ShopUnitImport, а в бд ShopUnit
-        new_node = await ShopUnitModel.get(node.id)
+        new_node = await ShopUnit.get(node.id)
         if new_node:
             await new_node.update(date=imports.updateDate, **node.dict()).apply()
         else:
-            new_node = await ShopUnitModel.create(date=imports.updateDate, **node.dict())
-        background_tasks.add_task(ShopUnitModel.update_category_price, new_node)
+            new_node = await ShopUnit.create(date=imports.updateDate, **node.dict())
+        background_tasks.add_task(ShopUnit.update_category_price, new_node)
 
     return Response()

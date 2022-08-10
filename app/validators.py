@@ -1,4 +1,4 @@
-from app.db.models import ShopUnitModel
+from app.db.models import ShopUnit
 from app.db.validation_models import ShopUnitImport, ShopUnitType
 
 
@@ -22,7 +22,7 @@ async def parent_is_category(nodes: list[ShopUnitImport]) -> bool:
             return False
         elif in_query:
             continue
-        parent_node = await ShopUnitModel.get_or_404(node.parentId)
+        parent_node = await ShopUnit.get_or_404(node.parentId)
         if parent_node.type != ShopUnitType.CATEGORY:
             return False
     return True
