@@ -4,7 +4,7 @@ from sqlalchemy.dialects.postgresql import UUID
 
 from app.config import settings
 
-db = Gino(dsn=settings.pg_dsn)
+db = Gino(dsn=settings.pg_dsn)  # echo для логов
 
 
 class ShopUnit(db.Model):

@@ -3,7 +3,7 @@ from pydantic.types import UUID4
 from starlette.responses import Response
 
 from app.db.models import ShopUnit
-from app.utils.responses import VALIDATION_ERROR_RESPONSE, NOT_FOUND_RESPONSE
+from app.misc.responses import VALIDATION_ERROR_RESPONSE, NOT_FOUND_RESPONSE
 
 router = APIRouter(prefix='/delete',
                    tags=['Delete item'],

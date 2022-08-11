@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Path
 from pydantic.types import UUID4
+from fastapi_cache.decorator import cache
 
 from app.db.models import ShopUnit
 from app.db.validation_models import ShopUnitExportRequest
 from app.utils.children_expand import get_all_children_list
-from app.utils.responses import VALIDATION_ERROR_RESPONSE, NOT_FOUND_RESPONSE
+from app.misc.responses import VALIDATION_ERROR_RESPONSE, NOT_FOUND_RESPONSE
 
 router = APIRouter(prefix='/nodes',
                    tags=['View item'],
@@ -12,6 +13,7 @@ router = APIRouter(prefix='/nodes',
 
 
 @router.get('/{id}', response_model=ShopUnitExportRequest)
+@cache(10)
 async def view_node(id: UUID4 = Path(..., description='**Existing** Item id', example='3fa85f64-5717-4562-b3fc-2c963f66afa6')):
     """### Можно посмотреть на товары"""
     

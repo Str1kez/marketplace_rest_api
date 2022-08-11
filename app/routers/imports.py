@@ -5,9 +5,9 @@ from datetime import datetime as dt
 
 from app.db.models import ShopUnit
 from app.db.validation_models import ShopUnitImportRequest
-from app.exceptions import CustomValidationError
+from app.misc.exceptions import CustomValidationError
+from app.misc.responses import VALIDATION_ERROR_RESPONSE
 from app.utils.datetime_convert import convert_to_iso_8601
-from app.utils.responses import VALIDATION_ERROR_RESPONSE
 from app.validators import parent_is_category
 
 router = APIRouter(prefix='/imports',
