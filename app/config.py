@@ -9,13 +9,13 @@ class Settings(BaseSettings):
     pg_dsn: PostgresDsn = Field(..., env='DB_URL')
     redis_dsn: RedisDsn = Field(..., env='REDIS_CACHE_URL')
 
-    debug: bool = True
+    debug: bool = Field(True, env='DEBUG')
 
     host: str = Field('localhost', env='HOST')
     port: PositiveInt = Field(8001, env='PORT')
 
     class Config:
-        env_file = path.join(BASE_DIR, '.env')
+        env_file = path.join(BASE_DIR, '.env')  # в контейнер через compose
         env_file_encoding = 'utf-8'
 
 

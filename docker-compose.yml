@@ -1,0 +1,27 @@
+version: '3.4'
+
+services:
+  api:
+    build: .
+    command: sh -c "cd db/migrations; alembic upgrade head; cd ../..; python3 main.py"
+    ports:
+      - 8001:8001
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - postgres
+  redis:
+    image: redis/redis-stack
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - 8002:8001
+  postgres:
+    image: postgres
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - 5433:5432
